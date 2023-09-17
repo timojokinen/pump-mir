@@ -19,8 +19,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(authOptions);
-
-  if (!session) {
+  if (!session || !session.user) {
     redirect("/api/auth/signin");
   }
 
@@ -29,12 +28,15 @@ export default async function RootLayout({
       <body>
         <Theme
           appearance="dark"
-          accentColor="lime"
+          accentColor="crimson"
           grayColor="slate"
           hasBackground
           panelBackground="translucent"
         >
-          <AuthProvider session={session}>{children}</AuthProvider>
+          <AuthProvider session={session}>
+            {/* <Header /> */}
+            {children}
+          </AuthProvider>
         </Theme>
       </body>
     </html>

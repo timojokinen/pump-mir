@@ -1,49 +1,37 @@
-"use client";
+import CreateExerciseDialog from "@/components/exercises/create-exercise";
+import ExercisesList from "@/components/exercises/exercises-list";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/db";
+import { Container, Flex, Section } from "@radix-ui/themes";
+import { getServerSession } from "next-auth";
 
-import * as Label from "@radix-ui/react-label";
-import {
-  Button,
-  Card,
-  Container,
-  Flex,
-  Grid,
-  Heading,
-  Section,
-  Text,
-  TextField
-} from "@radix-ui/themes";
+export default async function Home() {
+  const session = await getServerSession(authOptions);
+  const exercises = await prisma.exercise.findMany({
+    where: {
+      creatorId: session!.user!.id,
+    },
+  });
 
-export default function Home() {
   return (
     <main>
-      <Section>
-        <Container size="3" mb="8">
-          <Heading as="h1" size="9">
-            PumpMir
-          </Heading>
-        </Container>
-        <Container size="3">
-          <Card size="5">
-            <Heading mb="4" as="h2" size="5">
-              Log Workout
-            </Heading>
-            <Grid columns="2" mb="6">
-              <Label.Root htmlFor="input1">
-                <Text size="4">Bench Press</Text>
-              </Label.Root>
-              <TextField.Input
-                id="input1"
-                placeholder="Enter your email"
-              ></TextField.Input>
-            </Grid>
-            <Flex justify="end">
-              <Button variant="surface" size="4">
-                Log Workout
-              </Button>
-            </Flex>
-          </Card>
-        </Container>
-      </Section>
+      <Container size="2" mb="8" p="4">
+        <ExercisesList exercises={exercises}></ExercisesList>
+      </Container>
+      {/*       <Grid columns="2" mb="6">
+        <Label.Root htmlFor="input1">
+          <Text size="4">Bench Press</Text>
+        </Label.Root>
+        <TextField.Input
+          id="input1"
+          placeholder="Enter your email"
+        ></TextField.Input>
+      </Grid>
+      <Flex justify="end">
+        <Button variant="surface" size="4">
+          Log Workout
+        </Button>
+      </Flex> */}
     </main>
   );
 }
