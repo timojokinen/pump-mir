@@ -12,4 +12,12 @@ export const authOptions: AuthOptions = {
       issuer: process.env.AUTH0_ISSUER!,
     }),
   ],
+  callbacks: {
+    session: async ({ session, user }) => {
+      if (session?.user) {
+        session.user.id = user.id;
+      }
+      return session;
+    },
+  },
 };

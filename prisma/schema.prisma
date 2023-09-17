@@ -35,13 +35,14 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
+    id            String     @id @default(cuid())
     name          String?
-    email         String?   @unique
+    email         String?    @unique
     emailVerified DateTime?
     image         String?
     accounts      Account[]
     sessions      Session[]
+    exercises      Exercise[]
 }
 
 model VerificationToken {
@@ -50,4 +51,11 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Exercise {
+    id        String @id @default(cuid())
+    name      String
+    creatorId String
+    createdBy User   @relation(fields: [creatorId], references: [id])
 }
